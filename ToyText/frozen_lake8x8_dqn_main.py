@@ -31,10 +31,10 @@ def main():
     is_training = True  # Boolean to determine if the agent is in training mode or testing mode
 
     if is_training:
-        plot_filename = 'frozen_lake8x8_training.png'  # Filename for saving the training plot
+        plot_filename = 'frozen_lake8x8_dqn_training.png'  # Filename for saving the training plot
         print('***** Training Phase *****')  # Inform the user that the training phase is starting
     else:
-        plot_filename = 'frozen_lake8x8_testing.png'  # Filename for saving the testing plot
+        plot_filename = 'frozen_lake8x8_dqn_testing.png'  # Filename for saving the testing plot
         print('***** Testing Phase *****')  # Inform the user that the testing phase is starting
 
     agent = RLAgent(env_name, is_training, render)  # Initialize the RLAgent with the specified parameters
