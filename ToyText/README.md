@@ -17,3 +17,14 @@ Key components include the agent (learner), environment (external system), state
 ## **Overview**
 
 This repository focuses on implementing and experimenting with RL algorithms in the ToyText environments provided by Gymnasium. The aim is to provide a clear and concise implementation of popular RL algorithms, making it easier for researchers and enthusiasts to understand the core concepts of RL.
+
+## **Environments**
+
+The following ToyText environments from Gymnasium are included:
+
+- `FrozenLake`
+- `Taxi`
+- `Blackjack`
+- `CliffWalking`
+
+These environments are simple yet effective for understanding the basics of reinforcement learning algorithms.
