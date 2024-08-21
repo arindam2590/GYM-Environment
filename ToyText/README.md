@@ -1,5 +1,9 @@
 # **Reinforcement Learning Implementation**
 
+Reinforcement Learning (RL) is a type of machine learning where an agent learns to make decisions by interacting with an environment to maximize cumulative rewards. Unlike supervised learning, RL doesn’t rely on labeled data; instead, the agent learns from the consequences of its actions.
+
+Key components include the agent (learner), environment (external system), state (current situation), action (choices available), and reward (feedback). The agent balances exploring new actions with exploiting known ones to maximize rewards over time. RL is used in areas like robotics, gaming, and autonomous systems to handle complex decision-making tasks.
+
 ## **Table of Contents**
 - [Overview](#overview)
 - [Environments](#environments)
