@@ -31,7 +31,7 @@ These environments are simple yet effective for understanding the basics of rein
 
 ## **Algorithms Implemented**
 
-The repository includes implementations of the following RL algorithms:
+The repository includes implementations of the following RL algorithms in *TensorFlow* and *PyTorch*:
 
 - *Q-Learning*: A model-free RL algorithm that learns the value of actions in states.
 - *SARSA (State-Action-Reward-State-Action)*: An on-policy RL algorithm that updates its Q-values based on the action taken.
@@ -41,7 +41,7 @@ The repository includes implementations of the following RL algorithms:
 
 ## Usage
 
-To run the RL algorithms on a specific ToyText environment, use the following command:
+To run the RL algorithms on a specific ToyText environment, execute * *_main.py* by using the following command:
 
 ```bash
-python main.py --env <ENVIRONMENT_NAME> --algo <ALGORITHM_NAME>
+python *_main.py
