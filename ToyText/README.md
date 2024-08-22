@@ -28,3 +28,20 @@ The following ToyText environments from Gymnasium are included:
 - `CliffWalking`
 
 These environments are simple yet effective for understanding the basics of reinforcement learning algorithms.
+
+## **Algorithms Implemented**
+
+The repository includes implementations of the following RL algorithms:
+
+- *Q-Learning*: A model-free RL algorithm that learns the value of actions in states.
+- *SARSA (State-Action-Reward-State-Action)*: An on-policy RL algorithm that updates its Q-values based on the action taken.
+- *Monte Carlo Methods*: A class of algorithms that learn from complete episodes by averaging sample returns.
+- *Value Based*: A family of reinforcement learning algorithms that works on *Q* value of the policy.
+- *Policy Gradient*: A family of algorithms that optimize the policy directly by gradient ascent.
+
+## Usage
+
+To run the RL algorithms on a specific ToyText environment, use the following command:
+
+```bash
+python main.py --env <ENVIRONMENT_NAME> --algo <ALGORITHM_NAME>
