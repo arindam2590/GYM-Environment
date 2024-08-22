@@ -8,6 +8,7 @@ Key components include the agent (learner), environment (external system), state
 - [Overview](#overview)
 - [Environments](#environments)
 - [Algorithms Implemented](#algorithms-implemented)
+- [Dependecies](#dependencies)
 - [Usage](#usage)
 - [Results](#results)
 
@@ -36,6 +37,14 @@ The repository includes implementations of the following RL algorithms in *Tenso
 - *Value Based*: A family of reinforcement learning algorithms that works on *Q* value of the policy.
 - *Policy Gradient*: A family of algorithms that optimize the policy directly by gradient ascent.
 
+## Dependencies
+
+A few dependencies are set up in the virtual environment to execute the repository code. Here’s a list of common dependencies you might need:
+
+- `Numpy`
+- `Gymnasium`
+- `Matplotlib`
+  
 ## Usage
 
 To run the RL algorithms on a specific ToyText environment, execute * *_main.py* by using the following command:
