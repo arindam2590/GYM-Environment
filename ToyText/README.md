@@ -42,11 +42,13 @@ To run the RL algorithms on a specific ToyText environment, execute * *_main.py*
 
 ```bash
 python *_main.py
+```
 
 For example, to run Q-Learning on the FrozenLake environment:
 
 ```bash
 python frozenlake_ql_main.py
+```
 
 Results
 The results of the experiments, including plots and performance metrics, will be saved in the figures/ directory. This includes learning curves, rewards per episode, and other relevant statistics.
