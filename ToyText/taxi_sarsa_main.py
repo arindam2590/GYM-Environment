@@ -68,7 +68,7 @@ class RLAgent:
             return np.argmax(self.q_table[state, :])
 
     # Method to update the Q-table based on the agent's experience
-    def train(self, state, new_state, action, reward):
+    def train(self, state, action, reward, new_state, new_action):
         """
         Update the Q-table based on the agent's experience.
 
@@ -82,7 +82,7 @@ class RLAgent:
         - The temporal difference error.
         """
         # Calculate the temporal difference error
-        temporal_difference = reward + self.gamma * np.max(self.q_table[new_state, :]) - self.q_table[state, action]
+        temporal_difference = reward + self.gamma * self.q_table[new_state, new_action] - self.q_table[state, action]
 
         # Update the Q-value for the state-action pair
         self.q_table[state, action] += self.alpha * temporal_difference
@@ -103,7 +103,7 @@ class RLAgent:
         - training_error: Array of temporal difference errors per episode.
         - steps_per_episode: Array of steps taken per episode.
         """
-        # Initialize arrays to store performance metrics
+        # Initialize arrays to track performance metrics
         rewards_per_episode = np.zeros(episodes)
         epsilon_decay_per_episode = np.zeros(episodes)
         steps_per_episode = np.zeros(episodes)
@@ -111,45 +111,43 @@ class RLAgent:
         success_rate = np.zeros(episodes)
 
         for episode in range(episodes):
-            state = self.env.reset()[0]  # Reset the environment to the initial state
+            state = self.env.reset()[0]  # Reset environment and get the initial state
+            action = self.choose_action(state)  # Choose an initial action
             done = False
             steps, total_reward, success_status = 0, 0, 0
 
             while not done:
-                # Choose an action based on the current state
-                action = self.choose_action(state)
-                # Execute the action and observe the result
-                new_state, reward, terminated, truncated, _ = self.env.step(action)
+                new_state, reward, terminated, truncated, _ = self.env.step(
+                    action)  # Take the action and observe results
+                new_action = self.choose_action(new_state)  # Choose the next action
 
                 if self.is_training:
-                    # Update the Q-table based on the experience
-                    error = self.train(state, new_state, action, reward)
+                    error = self.train(state, action, reward, new_state, new_action)  # Train the agent using SARSA
 
-                # Move to the new state
-                state = new_state
+                state, action = new_state, new_action  # Update the state and action for the next step
                 total_reward += reward
                 steps += 1
-                done = terminated or truncated  # Check if the episode has ended
+                done = terminated or truncated  # Check if episode is done
                 if reward == 20:
                     success_status = 1
 
-            # Print episode results
+            # Print episode summary
             print(f"Episode: {episode + 1}, Steps: {steps}, Reward: {reward}")
             print("=======================================")
 
-            # Record performance metrics for the episode
+            # Record metrics
             rewards_per_episode[episode] = total_reward
             epsilon_decay_per_episode[episode] = self.epsilon
             steps_per_episode[episode] = steps
             success_rate[episode] = success_status
             if self.is_training:
                 training_error[episode] = error
-            self.epsilon = max(self.epsilon - self.epsilon_decay_rate, 0)  # Decay the exploration rate
+            # Decay epsilon
+            self.epsilon = max(self.epsilon - self.epsilon_decay_rate, 0)
 
             if self.epsilon == 0.0:
-                self.alpha = 0.0001  # Reduce the learning rate when exploration is minimal
+                self.alpha = 0.0001  # Reduce learning rate when exploration stops
 
-        # Return the recorded performance metrics
         return rewards_per_episode, epsilon_decay_per_episode, training_error, steps_per_episode, success_rate
 
 
@@ -248,17 +246,17 @@ def main():
 
     if is_training:
         # Plot results and save Q-table during training
-        plot_filename = env_name + '_training_reward.png'
-        plot_episode_len_filename = env_name + '_training_episode_len.png'
-        decay_plot_filename = env_name + '_epsilon_decay.png'
-        error_plot_filename = env_name + '_training_error.png'
+        plot_filename = env_name + '_training_reward_sarsa.png'
+        plot_episode_len_filename = env_name + '_training_episode_len_sarsa.png'
+        decay_plot_filename = env_name + '_epsilon_decay_sarsa.png'
+        error_plot_filename = env_name + '_training_error_sarsa.png'
         plot_epsilon_decay(epsilon_decay, decay_plot_filename, episodes)
         plot_training_error(training_error, error_plot_filename, episodes)
         agent.save_q_table(model_filename)
     else:
         # Plot results and calculate success rate during testing
-        plot_filename = env_name + '_testing_reward.png'
-        plot_episode_len_filename = env_name + '_testing_episode_len.png'
+        plot_filename = env_name + '_testing_reward_sarsa.png'
+        plot_episode_len_filename = env_name + '_testing_episode_len_sarsa.png'
         success = 100 * np.mean(success_rate)
         print('Test Success Rate:', success)
 
