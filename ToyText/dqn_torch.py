@@ -25,9 +25,9 @@ class ReplayBuffer:
 class DQN(nn.Module):
     def __init__(self, state_size, action_size):
         super().__init__()
-        self.layer1 = nn.Linear(state_size, 128)
-        self.layer2 = nn.Linear(128, 128)
-        self.layer3 = nn.Linear(128, action_size)
+        self.layer1 = nn.Linear(state_size, 32)
+        self.layer2 = nn.Linear(32, 16)
+        self.layer3 = nn.Linear(16, action_size)
 
     def forward(self, x):
         x = F.relu(self.layer1(x))
@@ -69,37 +69,39 @@ class DQNModel:
         else:
             with torch.no_grad():
                 action = self.main_network(self.encode_state(state).to(self.device)).argmax().view(1, 1)
-        return action
+        return action.item()
 
     def train(self, batch_size):
         minibatch = self.replay_buffer.sample(batch_size)
-        current_q_values, target_q_values = [], []
-        for state, action, reward, new_state, terminated in minibatch:
+        predicted_Q_values, target_Q_values = [], []
+        for state, action, reward, new_state, done in minibatch:
+            #print(f'state: {state}, action: {action}, reward: {reward}, next_state: {new_state}')
             state = self.encode_state(state).unsqueeze(0).to(self.device)
             new_state = self.encode_state(new_state).unsqueeze(0).to(self.device)
             reward = torch.tensor([reward], device=self.device)
             action = torch.tensor([action], device=self.device, dtype=torch.long)
 
-            if terminated:
-                target = reward
-            else:
+            if not done:
                 with torch.no_grad():
-                    target = reward + self.gamma * self.target_network(new_state).max(dim=1)[0]
+                    target_Q = reward + self.gamma * self.target_network(new_state).max(dim=1)[0]
+            else:
+                target_Q = reward
+            target_Q = target_Q.unsqueeze(0)
+            predicted_Q = self.main_network(state).gather(1, action.view(1, 1))
+            predicted_Q_values.append(predicted_Q)
+            target_Q_values.append(target_Q)
 
-            current_q = self.main_network(state).gather(1, action.view(1, 1))
-            current_q_values.append(current_q)
-            target_q_values.append(target)
-
-        current_q_tensor = torch.cat(current_q_values).squeeze()
-        target_q_tensor = torch.cat(target_q_values).squeeze()
-        loss = self.loss_fn(current_q_tensor, target_q_tensor)
+        predicted_q_tensor = torch.cat(predicted_Q_values).squeeze()
+        target_q_tensor = torch.cat(target_Q_values).squeeze()
+        loss = self.loss_fn(predicted_q_tensor, target_q_tensor)
 
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+        return loss
 
     def encode_state(self, state):
-        one_hot_tensor = torch.zeros(self.state_size, device=self.device)
+        one_hot_tensor = torch.zeros(self.state_size, dtype=torch.float32, device=self.device)
         one_hot_tensor[state] = 1
         return one_hot_tensor
 

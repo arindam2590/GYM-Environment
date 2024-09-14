@@ -1,9 +1,11 @@
 {
     "gamma": 0.9,
-    "alpha": 0.001,
+    "alpha": 0.01,
     "epsilon": 1.0,
     "epsilon_min": 0.1,
-    "epsilon_decay": 0.0005,
+    "epsilon_decay": 0.999,
     "update_rate": 10,
-    "capacity": 10000
+    "capacity": 10000,
+    "fig_dir": "figures/",
+    "excel_filename": "Training_data.xlsx"
 }
